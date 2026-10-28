@@ -28,4 +28,15 @@ public class Zwierze {
 
     public Zwierze() {
     }
+
+    @Override
+    public String toString() {
+        return "Zwierze{" +
+                "id=" + id +
+                ", gatunek='" + gatunek + '\'' +
+                ", srodowiskoZycia='" + srodowiskoZycia + '\'' +
+                ", czyRoslinozerne=" + czyRoslinozerne +
+                ", sredniaWiek=" + sredniaWiek +
+                '}';
+    }
 }
