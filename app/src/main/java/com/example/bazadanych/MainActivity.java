@@ -7,13 +7,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.room.Room;
 
 public class MainActivity extends AppCompatActivity {
-
+    private ZwierzeDataBase zwierzetaDataBase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        zwierzetaDataBase = Room.databaseBuilder(
+                getApplicationContext(),
+                ZwierzeDataBase.class,
+                "zwierzeta_db"
+        )
+                .allowMainThreadQueries()
+                .build();
+        zwierzetaDataBase.zwrocZwierzeDao().wstawDoBazy(
+                new Zwierze("sarna europejska", "ladowne", true, 12)
+        );
     }
 }
