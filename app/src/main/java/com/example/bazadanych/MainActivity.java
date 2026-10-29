@@ -17,6 +17,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,10 +27,11 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextGatunek, editTextWynik;
     private Spinner spinnerSrodowisko;
     private CheckBox checkBoxCzyroslinozerny;
-    private Button button;
+    private Button button, buttonAktualizacja;
     private ListView listView;
     private ArrayAdapter<Zwierze> arrayAdapter;
     private List<Zwierze> zwierzeta;
+    private  Zwierze kliknietezwierze;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         button = findViewById(R.id.button);
+        buttonAktualizacja = findViewById(R.id.button2);
         editTextGatunek = findViewById(R.id.editTextGatunek);
         editTextWynik = findViewById(R.id.editTextText2);
         spinnerSrodowisko = findViewById(R.id.spinner);
@@ -84,6 +88,36 @@ public class MainActivity extends AppCompatActivity {
                         zwierzeta.remove(i);
                         arrayAdapter.notifyDataSetChanged();
                         return false;
+                    }
+                }
+        );
+        listView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        kliknietezwierze = zwierzeta.get(i);
+                        editTextGatunek.setText(kliknietezwierze.gatunek);
+                        checkBoxCzyroslinozerny.setChecked(kliknietezwierze.czyRoslinozerne);
+                        ArrayList<String> srodowiska = new ArrayList<String>(Arrays.asList(
+                                "wodne", "lądowe", "powietrzne"));spinnerSrodowisko.setSelection(srodowiska.indexOf(kliknietezwierze.srodowiskoZycia));
+
+                        spinnerSrodowisko.setSelection(srodowiska.indexOf(kliknietezwierze.srodowiskoZycia));
+                        editTextWynik.setText(String.valueOf(kliknietezwierze.sredniaWiek));
+                        buttonAktualizacja.setVisibility(View.VISIBLE);
+                    }
+                }
+        );
+        buttonAktualizacja.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        kliknietezwierze.gatunek = editTextGatunek.getText().toString();
+                        kliknietezwierze.srodowiskoZycia = spinnerSrodowisko.getSelectedItem().toString();
+                        kliknietezwierze.czyRoslinozerne = checkBoxCzyroslinozerny.isChecked();
+                        kliknietezwierze.sredniaWiek = Integer.parseInt(editTextWynik.getText().toString());
+                        zwierzetaDataBase.zwrocZwierzeDao().zaaktualizujZwierze(kliknietezwierze);
+                        arrayAdapter.notifyDataSetChanged();
+                        buttonAktualizacja.setVisibility(View.INVISIBLE);
                     }
                 }
         );
