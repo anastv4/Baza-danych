@@ -2,6 +2,7 @@ package com.example.bazadanych;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
                         );
                         zwierzetaDataBase.zwrocZwierzeDao().wstawDoBazy(zwierze);
+                        zwierzeta.add(zwierze);
+                        arrayAdapter.notifyDataSetChanged();
                     }
                 }
         );
@@ -72,5 +75,17 @@ public class MainActivity extends AppCompatActivity {
                 zwierzeta);
         listView.setAdapter(arrayAdapter);
         ///komit sprzwdzic
+
+        listView.setOnItemLongClickListener(
+                new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        zwierzetaDataBase.zwrocZwierzeDao().usunZBazy(zwierzeta.get(i));
+                        zwierzeta.remove(i);
+                        arrayAdapter.notifyDataSetChanged();
+                        return false;
+                    }
+                }
+        );
     }
 }
